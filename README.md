@@ -73,3 +73,11 @@ Lets say for an example this service goes to production, those are several impro
 1. Send metrics from the script - either by statsd or prometheus protocol (exposing `/metrics` path) it would be great to have metrics like `messages_published` and `messages recieved` to understand the scale of this service and the utilization of resources (for example - if we needed 1 CPU core for 3000 messages, and now after a deployment we need 1.3 cores for 3000 messages - we downgraded performance) 
 
 2. Allowing connections from non-localhost - this is pretty simple, but add another option to click.cli to choose a non-local rabbitMQ.
+This is important for using RabbitMQ Cloud, as it was specified in this exercise (but unfortunatly i dont have an account and couldn't test)
+for rabbit cloud usage, we need to implement: 
+```
+def start_subscriber():
+    connection = pika.BlockingConnection(pika.URLParameters('amqp://username:password@rabbitmq-service.com:5672/vhost'))
+```
+
+(of course, better to have password saved in a config file, and not as plain text in the code)

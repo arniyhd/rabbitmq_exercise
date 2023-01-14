@@ -4,8 +4,8 @@ import datetime
 
 
 def handle_message(channel, method, properties, body):
-    message = json.loads(body)
-    if 'to_user' in message and 'message' in message and 'publish' in message:
+    message = validate_message(body)
+    if validate_message(body) is not None:
         if message['publish'] == 'log':
             with open('messages.log', 'a') as log_file:
                 log_file.write(f'[{datetime.datetime.now()}] To: {message["to_user"]} Message: {message["message"]}\n')
@@ -13,6 +13,14 @@ def handle_message(channel, method, properties, body):
             channel.basic_ack(delivery_tag=method.delivery_tag)
     else:
         print("Invalid message!")
+
+
+def validate_message(body):
+    message = json.loads(body)
+    if 'to_user' in message and 'message' in message and 'publish' in message:
+        return(message)
+    else:
+        return(None)
 
 
 def start_subscriber():

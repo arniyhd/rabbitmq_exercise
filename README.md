@@ -35,8 +35,8 @@ messages        2
 ```
 python subscriber.py
 Subscribe started listening to messages - exit press CTRL+C
+Message to david has been logged
 Message to arnold has been logged
-Message to Arnold has been logged
 ^CSubsriber have been exited after getting CTRL+C
 ```
 
@@ -45,7 +45,7 @@ Message to Arnold has been logged
 ```
 cat messages.log
 [2023-01-14 11:31:33.661826] To: david Message: david
-[2023-01-14 11:31:33.664397] To: Arnold Message: Hey, This is an exercise for Mobileye!
+[2023-01-14 11:31:33.664397] To: arnold Message: Hey, This is an exercise for Mobileye!
 ```
 
 ## Validate messages are no longer in rabbitMQ:
@@ -62,3 +62,14 @@ messages        0
 ## Validate a message can't be consumed twice
 lets run 2 consumers simultaniously from different paths:
 
+<img width="615" alt="image" src="https://user-images.githubusercontent.com/122671058/212466519-3002d55f-ea9c-438a-bece-5d72bad8e047.png">
+
+as you can see, each subscriber read a unique message.
+
+## Improvements before going to production
+
+Lets say for an example this service goes to production, those are several improvements we can make:
+
+1. Send metrics from the script - either by statsd or prometheus protocol (exposing `/metrics` path) it would be great to have metrics like `messages_published` and `messages recieved` to understand the scale of this service and the utilization of resources (for example - if we needed 1 CPU core for 3000 messages, and now after a deployment we need 1.3 cores for 3000 messages - we downgraded performance) 
+
+2. Allowing connections from non-localhost - this is pretty simple, but add another option to click.cli to choose a non-local rabbitMQ.

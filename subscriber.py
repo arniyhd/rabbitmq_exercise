@@ -2,7 +2,7 @@ import json
 import pika
 import datetime
 
-# function to handle received messages
+
 def handle_message(channel, method, properties, body):
     message = json.loads(body)
     if 'to_user' in message and 'message' in message and 'publish' in message:
@@ -21,7 +21,7 @@ def start_subscriber():
     channel.queue_declare(queue='messages')
     channel.basic_qos(prefetch_count=1)
     channel.basic_consume(queue='messages', on_message_callback=handle_message)
-    print('Subscribe started listening to messages - exit press CTRL+C')
+    print('Subscriber started listening to messages - exit press CTRL+C')
     try:
         channel.start_consuming()
     except KeyboardInterrupt:
